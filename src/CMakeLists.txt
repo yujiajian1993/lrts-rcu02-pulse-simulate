@@ -1,0 +1,39 @@
+SET(mname pulse_simulate)
+
+# 添加源文件
+SET(MODULE_SRC "")
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/src/main MODULE_SRC)
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/modsrc/codebase MODULE_SRC)
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/modsrc/b2v MODULE_SRC)
+AUX_SOURCE_DIRECTORY(${PROJECT_SOURCE_DIR}/modsrc/ring MODULE_SRC)
+
+#添加头文件
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include/base)
+include_directories(${PROJECT_SOURCE_DIR}/src/include)
+
+#指定可执行文件输出目录，输出到bin文件下面
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+#设置库输出路径
+#SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR} CACHE INTERNAL "USER lib first")
+
+#输出静态库
+ADD_LIBRARY(static_${mname} STATIC ${MODULE_SRC})
+#SET_TARGET_PROPERTIES(static_${mname} PROPERTIES OUTPUT_NAME "static")   
+
+#输出动态库
+ADD_LIBRARY(shared_${mname} SHARED ${MODULE_SRC})
+#SET_TARGET_PROPERTIES(shared_${mname} PROPERTIES OUTPUT_NAME "shared") 
+
+#在指定目录下查找库
+FIND_LIBRARY(LIBPATH ${PROJECT_SOURCE_DIR}/lib)
+
+#生成可执行文件
+ADD_EXECUTABLE(${mname} ${MODULE_SRC})
+
+#连接库
+#TARGET_LINK_LIBRARIES(${mname} ${PROJECT_SOURCE_DIR}/lib/libb2v.a)
+#TARGET_LINK_LIBRARIES(${mname} ${PROJECT_SOURCE_DIR}/lib/libcodebase.a)
+#TARGET_LINK_LIBRARIES(${mname} ${PROJECT_SOURCE_DIR}/lib/libring.a)
